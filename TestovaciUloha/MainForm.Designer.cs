@@ -52,6 +52,7 @@
             dataGridView_Products.Name = "dataGridView_Products";
             dataGridView_Products.Size = new Size(541, 374);
             dataGridView_Products.TabIndex = 0;
+            dataGridView_Products.CellClick += dataGridView_Products_CellClick;
             // 
             // groupBox_ProductOverview
             // 
@@ -103,7 +104,6 @@
             dataGridView_Parts.Name = "dataGridView_Parts";
             dataGridView_Parts.Size = new Size(442, 374);
             dataGridView_Parts.TabIndex = 0;
-            dataGridView_Parts.CellContentClick += dataGridView_Parts_CellContentClick;
             // 
             // groupBox_PartOverview
             // 

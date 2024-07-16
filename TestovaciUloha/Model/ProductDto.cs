@@ -16,10 +16,6 @@ namespace TestovaciUloha.Model
         public double price { get; set; }
         public string? note { get; set; }
         public int Parts {  get; set; }
-        [Browsable(false)]
-        public DateTime? createdAt { get; set; }
-        [Browsable(false)]
-        public DateTime? editedAt { get; set; }
 
         public ProductDto(Product product)
         {
@@ -28,8 +24,6 @@ namespace TestovaciUloha.Model
             this.description = product.description;
             this.price = product.price;
             this.note = product.note;
-            this.createdAt = product.createdAt;
-            this.editedAt = product.editedAt;
         }
 
         public ProductDto()

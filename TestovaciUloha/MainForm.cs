@@ -17,16 +17,14 @@ namespace TestovaciUloha
     public partial class MainForm : Form
     {
         public Context context = new Context();
-        
-        public BindingList<ProductDto> Products = new BindingList<ProductDto>();
-        public BindingList<Part> Parts = new BindingList<Part>();
 
         public MainForm()
         {
             InitializeComponent();
-
-            button_refrech_Click(null, null);            
+            SetProducts();
         }
+
+        #region Product
 
         private void button_ProductAdd_Click(object sender, EventArgs e)
         {
@@ -43,6 +41,7 @@ namespace TestovaciUloha
                 });
 
                 this.context.SaveChanges();
+                this.SetProducts();
             }
         }
 
@@ -54,7 +53,7 @@ namespace TestovaciUloha
                 return;
             }
 
-            int selectedIndex = this.dataGridView_Products.SelectedRows[0].Index;
+            int selectedIndex = this.dataGridView_Products.CurrentCell.RowIndex;
             Product selected = this.context.Product.ToList()[selectedIndex];
 
             Product_InsertEdit_Form newProduct = new Product_InsertEdit_Form();
@@ -71,6 +70,7 @@ namespace TestovaciUloha
                 selected.note = newProduct.textBox_Note.Text;
 
                 context.SaveChanges();
+                this.SetProducts();
             }
         }
 
@@ -82,8 +82,8 @@ namespace TestovaciUloha
                 return;
             }
 
-            int removingIndex = this.dataGridView_Products.SelectedRows[0].Index;
-            int removingId = (int)this.Products[removingIndex].id;
+            int removingIndex = this.dataGridView_Products.CurrentCell.RowIndex;
+            int removingId = (int)this.context.Product.ToList()[removingIndex].id;
             Product removing = this.context.Product.Find(removingId);
             this.context.Product.Remove(removing);
 
@@ -91,8 +91,17 @@ namespace TestovaciUloha
             this.context.Part.RemoveRange(removingParts);
 
             this.context.SaveChanges();
+            this.SetProducts();
         }
 
+        private void dataGridView_Products_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            SetParts((int)this.context.Product.ToList()[this.dataGridView_Products.CurrentCell.RowIndex].id);
+        }
+
+        #endregion
+
+        #region Part
 
         private void button_PartAdd_Click(object sender, EventArgs e)
         {
@@ -113,20 +122,26 @@ namespace TestovaciUloha
             }
 
             int removingIndex = this.dataGridView_Parts.SelectedRows[0].Index;
-            int removingId = (int)this.Parts[removingIndex].id;
+            int removingId = (int)this.context.Part.ToList()[removingIndex].id;
             Part removing = this.context.Part.Find(removingId);
             this.context.Part.Remove(removing);
             this.context.SaveChanges();
+
+            SetParts((int)this.context.Product.ToList()[this.dataGridView_Products.CurrentCell.RowIndex].id);
         }
 
+        #endregion
 
         private void button_refrech_Click(object sender, EventArgs e)
         {
-            BindingList<ProductDto> products = new BindingList<ProductDto>();
-            List<Product> productList = context.Product.ToList();
-            BindingList<Product> contextProducts = new BindingList<Product>(productList);
+            SetProducts();
+        }
 
-            foreach (Product product in contextProducts)
+        #region GridMethods
+        private void SetProducts()
+        {
+            List<ProductDto> products = new List<ProductDto>();
+            foreach (Product product in context.Product.ToList())
             {
                 ProductDto productDto = new ProductDto(product);
                 productDto.Parts = context.Part.Where(x => x.productId == product.id).ToList().Count;
@@ -134,16 +149,14 @@ namespace TestovaciUloha
                 products.Add(productDto);
             }
 
-            this.Products = products;
-            this.Parts = new BindingList<Part>(context.Part.ToList());
-
-            this.dataGridView_Products.DataSource = Products;
-            this.dataGridView_Parts.DataSource = Parts;
+            this.dataGridView_Products.DataSource = products;
         }
 
-        private void dataGridView_Parts_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void SetParts(int ProductId)
         {
-
+            List<Part> parts = this.context.Part.Where(x => x.productId == ProductId).ToList();
+            this.dataGridView_Parts.DataSource = parts;
         }
+        #endregion
     }
 }
