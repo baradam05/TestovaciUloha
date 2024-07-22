@@ -105,12 +105,82 @@ namespace TestovaciUloha
 
         private void button_PartAdd_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented");
+            Part_InsertEdit_Form newPartForm = new();
+
+            List<string> ProductDataSource = new();
+            int i = 0;
+            int selectedProductIndex = -1;
+            foreach(Product product in this.context.Product.ToList())
+            {
+                ProductDataSource.Add(product.name);
+                
+                if(product.id == (int)this.context.Product.ToList()[dataGridView_Products.CurrentCell.RowIndex].id)
+                {
+                    selectedProductIndex = i;
+                }
+
+                i++;
+            }
+            newPartForm.comboBox_Product.DataSource = ProductDataSource;
+            newPartForm.comboBox_Product.SelectedIndex = selectedProductIndex;
+
+            if (newPartForm.ShowDialog() == DialogResult.OK)
+            {
+                this.context.Part.Add(new Part()
+                {
+                    productId = (int)this.context.Product.ToList()[newPartForm.comboBox_Product.SelectedIndex].id,
+                    name = newPartForm.textBox_Name.Text,
+                    description = newPartForm.textBox_Description.Text,
+                    price = Convert.ToDouble(newPartForm.textBox_Price.Text.Replace('.', ',')),
+                });
+
+                this.context.SaveChanges();
+                SetParts((int)this.context.Product.ToList()[this.dataGridView_Products.CurrentCell.RowIndex].id);
+            }
         }
 
         private void button_PartEdit_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented");
+            Part_InsertEdit_Form newPartForm = new();
+
+            List<string> ProductDataSource = new();
+            int i = 0;
+            int selectedProductIndex = -1;
+            foreach (Product product in this.context.Product.ToList())
+            {
+                ProductDataSource.Add(product.name);
+
+                if (product.id == (int)this.context.Product.ToList()[dataGridView_Products.CurrentCell.RowIndex].id)
+                {
+                    selectedProductIndex = i;
+                }
+
+                i++;
+            }
+            newPartForm.comboBox_Product.DataSource = ProductDataSource;
+             
+
+
+            int selectedIndex = this.dataGridView_Parts.CurrentCell.RowIndex;
+            Part selected = this.context.Part.ToList()[selectedIndex];
+
+            newPartForm.textBox_Name.Text = selected.name;
+            newPartForm.textBox_Description.Text = selected.description;
+            newPartForm.textBox_Price.Text = selected.price.ToString();
+
+            if (newPartForm.ShowDialog() == DialogResult.OK)
+            {
+                this.context.Part.Add(new Part()
+                {
+                    productId = (int)this.context.Product.ToList()[newPartForm.comboBox_Product.SelectedIndex].id,
+                    name = newPartForm.textBox_Name.Text,
+                    description = newPartForm.textBox_Description.Text,
+                    price = Convert.ToDouble(newPartForm.textBox_Price.Text.Replace('.', ',')),
+                });
+
+                this.context.SaveChanges();
+                SetParts((int)this.context.Product.ToList()[this.dataGridView_Products.CurrentCell.RowIndex].id);
+            }
         }
 
         private void button_PartDelete_Click(object sender, EventArgs e)

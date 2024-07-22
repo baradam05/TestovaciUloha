@@ -68,14 +68,14 @@
             textBox_Description.Multiline = true;
             textBox_Description.Name = "textBox_Description";
             textBox_Description.Size = new Size(385, 80);
-            textBox_Description.TabIndex = 7;
+            textBox_Description.TabIndex = 2;
             // 
             // textBox_Price
             // 
             textBox_Price.Location = new Point(79, 136);
             textBox_Price.Name = "textBox_Price";
             textBox_Price.Size = new Size(100, 23);
-            textBox_Price.TabIndex = 6;
+            textBox_Price.TabIndex = 3;
             textBox_Price.Validating += textBox_Price_Validating;
             // 
             // textBox_Note
@@ -83,14 +83,14 @@
             textBox_Note.Location = new Point(364, 136);
             textBox_Note.Name = "textBox_Note";
             textBox_Note.Size = new Size(100, 23);
-            textBox_Note.TabIndex = 5;
+            textBox_Note.TabIndex = 4;
             // 
             // textBox_Name
             // 
             textBox_Name.Location = new Point(79, 21);
             textBox_Name.Name = "textBox_Name";
             textBox_Name.Size = new Size(100, 23);
-            textBox_Name.TabIndex = 4;
+            textBox_Name.TabIndex = 1;
             textBox_Name.Validating += textBox_Name_Validating;
             // 
             // label4
@@ -134,7 +134,7 @@
             button_Cancel.Location = new Point(331, 189);
             button_Cancel.Name = "button_Cancel";
             button_Cancel.Size = new Size(75, 23);
-            button_Cancel.TabIndex = 1;
+            button_Cancel.TabIndex = 5;
             button_Cancel.Text = "Cancel";
             button_Cancel.UseVisualStyleBackColor = true;
             button_Cancel.Click += button_Cancel_Click;
@@ -144,7 +144,7 @@
             button_done.Location = new Point(412, 189);
             button_done.Name = "button_done";
             button_done.Size = new Size(75, 23);
-            button_done.TabIndex = 2;
+            button_done.TabIndex = 6;
             button_done.Text = "Done";
             button_done.UseVisualStyleBackColor = true;
             button_done.Click += button_done_Click;
