@@ -22,6 +22,11 @@ namespace TestovaciUloha
         {
             InitializeComponent();
             SetProducts();
+            Product firstProduct = this.context.Product.FirstOrDefault();
+            if (firstProduct != null)
+            {
+                SetParts((int)firstProduct.id);
+            }
         }
 
         #region Product
@@ -47,7 +52,7 @@ namespace TestovaciUloha
 
         private void button_ProductEdit_Click(object sender, EventArgs e)
         {
-            if (this.dataGridView_Products.SelectedRows.Count == 0)
+            if (this.dataGridView_Products.CurrentCell.RowIndex == -1)
             {
                 MessageBox.Show("No row was selected");
                 return;
@@ -76,7 +81,7 @@ namespace TestovaciUloha
 
         private void button_ProductDelete_Click(object sender, EventArgs e)
         {
-            if (this.dataGridView_Products.SelectedRows.Count == 0)
+            if (this.dataGridView_Products.CurrentCell.RowIndex == -1)
             {
                 MessageBox.Show("No row was selected");
                 return;
@@ -110,11 +115,13 @@ namespace TestovaciUloha
             List<string> ProductDataSource = new();
             int i = 0;
             int selectedProductIndex = -1;
-            foreach(Product product in this.context.Product.ToList())
+
+            List<Product> products = this.context.Product.ToList();
+            foreach(Product product in products)
             {
                 ProductDataSource.Add(product.name);
                 
-                if(product.id == (int)this.context.Product.ToList()[dataGridView_Products.CurrentCell.RowIndex].id)
+                if(product.id == (int)products[dataGridView_Products.CurrentCell.RowIndex].id)
                 {
                     selectedProductIndex = i;
                 }
@@ -128,14 +135,14 @@ namespace TestovaciUloha
             {
                 this.context.Part.Add(new Part()
                 {
-                    productId = (int)this.context.Product.ToList()[newPartForm.comboBox_Product.SelectedIndex].id,
+                    productId = (int)products[newPartForm.comboBox_Product.SelectedIndex].id,
                     name = newPartForm.textBox_Name.Text,
                     description = newPartForm.textBox_Description.Text,
                     price = Convert.ToDouble(newPartForm.textBox_Price.Text.Replace('.', ',')),
                 });
 
                 this.context.SaveChanges();
-                SetParts((int)this.context.Product.ToList()[this.dataGridView_Products.CurrentCell.RowIndex].id);
+                SetParts((int)products[this.dataGridView_Products.CurrentCell.RowIndex].id);
             }
         }
 
@@ -146,11 +153,13 @@ namespace TestovaciUloha
             List<string> ProductDataSource = new();
             int i = 0;
             int selectedProductIndex = -1;
-            foreach (Product product in this.context.Product.ToList())
+
+            List<Product> products = this.context.Product.ToList();
+            foreach (Product product in products)
             {
                 ProductDataSource.Add(product.name);
 
-                if (product.id == (int)this.context.Product.ToList()[dataGridView_Products.CurrentCell.RowIndex].id)
+                if (product.id == (int)products[dataGridView_Products.CurrentCell.RowIndex].id)
                 {
                     selectedProductIndex = i;
                 }
@@ -170,34 +179,35 @@ namespace TestovaciUloha
 
             if (newPartForm.ShowDialog() == DialogResult.OK)
             {
-                this.context.Part.Add(new Part()
-                {
-                    productId = (int)this.context.Product.ToList()[newPartForm.comboBox_Product.SelectedIndex].id,
-                    name = newPartForm.textBox_Name.Text,
-                    description = newPartForm.textBox_Description.Text,
-                    price = Convert.ToDouble(newPartForm.textBox_Price.Text.Replace('.', ',')),
-                });
+                selected.productId = (int)products[newPartForm.comboBox_Product.SelectedIndex].id;
+                selected.name = newPartForm.textBox_Name.Text;
+                selected.description = newPartForm.textBox_Description.Text;
+                selected.price = Convert.ToDouble(newPartForm.textBox_Price.Text.Replace('.', ','));
 
                 this.context.SaveChanges();
-                SetParts((int)this.context.Product.ToList()[this.dataGridView_Products.CurrentCell.RowIndex].id);
+                SetParts((int)products[this.dataGridView_Products.CurrentCell.RowIndex].id);
             }
         }
 
         private void button_PartDelete_Click(object sender, EventArgs e)
         {
-            if (this.dataGridView_Parts.SelectedRows.Count == 0)
+            if (this.dataGridView_Products.CurrentCell.RowIndex == -1)
             {
                 MessageBox.Show("No row was selected");
                 return;
             }
 
-            int removingIndex = this.dataGridView_Parts.SelectedRows[0].Index;
-            int removingId = (int)this.context.Part.ToList()[removingIndex].id;
-            Part removing = this.context.Part.Find(removingId);
+            List<Product> products = this.context.Product.ToList();
+            List<Part> parts = this.context.Part.ToList();
+
+            int removingIndex = this.dataGridView_Parts.CurrentCell.RowIndex;            
+            int productId = (int)products[this.dataGridView_Products.CurrentCell.RowIndex].id;
+            int removingId = (int)parts.Where(x => x.productId == productId).ToList()[removingIndex].id;
+            Part removing = parts.Where(x => x.id == removingId).FirstOrDefault();
             this.context.Part.Remove(removing);
             this.context.SaveChanges();
 
-            SetParts((int)this.context.Product.ToList()[this.dataGridView_Products.CurrentCell.RowIndex].id);
+            SetParts((int)products[this.dataGridView_Products.CurrentCell.RowIndex].id);
         }
 
         #endregion
@@ -224,6 +234,7 @@ namespace TestovaciUloha
 
         private void SetParts(int ProductId)
         {
+            this.groupBox_PartOverview.Text = $"{this.context.Product.Find(ProductId).name} parts overview";
             List<Part> parts = this.context.Part.Where(x => x.productId == ProductId).ToList();
             this.dataGridView_Parts.DataSource = parts;
         }

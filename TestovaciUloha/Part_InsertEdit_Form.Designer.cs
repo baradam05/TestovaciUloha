@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             groupBox_Part = new GroupBox();
             comboBox_Product = new ComboBox();
             label4 = new Label();
@@ -39,7 +40,9 @@
             label1 = new Label();
             button_done = new Button();
             button_Cancel = new Button();
+            errorProvider = new ErrorProvider(components);
             groupBox_Part.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // groupBox_Part
@@ -91,6 +94,7 @@
             textBox_Price.Name = "textBox_Price";
             textBox_Price.Size = new Size(100, 23);
             textBox_Price.TabIndex = 9;
+            textBox_Price.Validating += textBox_Price_Validating;
             // 
             // textBox_Name
             // 
@@ -98,6 +102,7 @@
             textBox_Name.Name = "textBox_Name";
             textBox_Name.Size = new Size(100, 23);
             textBox_Name.TabIndex = 5;
+            textBox_Name.Validating += textBox_Name_Validating;
             // 
             // label3
             // 
@@ -146,6 +151,10 @@
             button_Cancel.UseVisualStyleBackColor = true;
             button_Cancel.Click += button_Cancel_Click;
             // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
+            // 
             // Part_InsertEdit_Form
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -158,6 +167,7 @@
             Text = "Part_InsertEdit_Form";
             groupBox_Part.ResumeLayout(false);
             groupBox_Part.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
         }
 
@@ -173,5 +183,6 @@
         private Button button_Cancel;
         private Label label4;
         public ComboBox comboBox_Product;
+        private ErrorProvider errorProvider;
     }
 }

@@ -20,11 +20,11 @@ namespace TestovaciUloha
 
         private void button_done_Click(object sender, EventArgs e)
         {
-            if(ValidateChildren())
+            if (ValidateChildren())
             {
                 this.DialogResult = DialogResult.OK;
                 this.Close();
-            }            
+            }
         }
 
         private void button_Cancel_Click(object sender, EventArgs e)
@@ -36,10 +36,10 @@ namespace TestovaciUloha
 
         private void textBox_Name_Validating(object sender, CancelEventArgs e)
         {
-            if(string.IsNullOrEmpty(textBox_Name.Text))
+            if (string.IsNullOrEmpty(textBox_Name.Text))
             {
                 e.Cancel = true;
-                errorProvider.SetError(textBox_Name,"Required");
+                errorProvider.SetError(textBox_Name, "Required");
             }
             else
             {

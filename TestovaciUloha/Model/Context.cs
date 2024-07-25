@@ -15,8 +15,7 @@ namespace TestovaciUloha
         public DbSet<Part> Part {  get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySQL("server=localhost;database=TestDatabase;user=root;password=123456Ab;SslMode=none");
-
+            optionsBuilder.UseMySQL("server=localhost;database=TestDatabase;user=root;password=123456Ab;SslMode=Required");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
